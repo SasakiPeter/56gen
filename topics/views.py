@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Topic, Answer, Tag
+from .forms import AnswerForm
 
 User = get_user_model()
 
@@ -22,25 +23,37 @@ def index(request):
     return render(request, 'topics/index.html', {'topic_list': topic_list})
 
 
+# 1トピックに対して、複数のゴロが乗っているページ
 def detail(request, topic_id):
-    topic = get_object_or_404(Topic, id=topic_id)
-    answer_list = topic.answer_set.order_by('votes').reverse()
-    # topic = Topic.objects.get(id=topic_id)
-    return render(request, 'topics/detail.html', {'topic': topic, 'answer_list': answer_list})
+    answer_form = AnswerForm(request.POST or None)
 
+    if request.method == "GET":
+        topic = get_object_or_404(Topic, id=topic_id)
+        answer_list = topic.answer_set.order_by('votes').reverse()
+        # topic = Topic.objects.get(id=topic_id)
+        return render(request, 'topics/detail.html', {'topic': topic, 'answer_list': answer_list, 'answer_form': answer_form})
 
-# tag = Tag.objects.create(name="hoge")
-# q = Topic.objects.create(title="マメ科の生薬覚えられない")
+    if request.method == "POST" and answer_form.is_valid():
+        answer = answer_form.save(commit=False)
+        answer.topic = Topic.objects.get(id=topic_id)
+        if request.user.is_authenticated:
+            answer.user = request.user
+        answer.save()
 
-# q.tags.add(tag) #remove allもある
-# 一括はこう
-# a.tags.set((tag1,tag2)) # clearもある
+    return redirect('topics:detail', topic_id=topic_id)
 
-# q.save()
+    # tag = Tag.objects.create(name="hoge")
+    # q = Topic.objects.create(title="マメ科の生薬覚えられない")
 
-# Topic.objects.filter(tags__name="Django")
-# とかも使いそう
+    # q.tags.add(tag) #remove allもある
+    # 一括はこう
+    # a.tags.set((tag1,tag2)) # clearもある
 
-# 使いそう
-# q.tags.set([Tag.objects.get(name=name)
-#             for name in request.POST.getlist("input-name")])
+    # q.save()
+
+    # Topic.objects.filter(tags__name="Django")
+    # とかも使いそう
+
+    # 使いそう
+    # q.tags.set([Tag.objects.get(name=name)
+    #             for name in request.POST.getlist("input-name")])

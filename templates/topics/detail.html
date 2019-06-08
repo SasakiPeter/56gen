@@ -43,8 +43,8 @@
       <thead>
         <tr>
           <th scope="col">票数</th>
-          <th scope="col">タイトル</th>
-          <th scope="col">詳細</th>
+          <th scope="col">ゴロ</th>
+          <th scope="col">説明</th>
           <th scope="col">投稿日時</th>
           <th scope="col">投稿者</th>
         </tr>
@@ -53,13 +53,9 @@
         {% for answer in answer_list %}
         <tr>
           <th scope="row">{{ answer.votes }}</th>
-          <td>
-            <a href="{% url 'topics:detail' topic.id %}">
-              {{ answer.title }}
-            </a>
-          </td>
+          <td>{{ answer.title }}</td>
           <td>{{ answer.desc }}</td>
-          <td>{{ answer.pub_date |date:"y/m/d P" }}</td>
+          <td>{{ answer.pub_date | date:"y/m/d P" }}</td>
           <td>
             <a href="{% url 'accounts:detail' answer.user.id %}">
               {{ answer.user.display_name }}
@@ -70,8 +66,18 @@
       </tbody>
     </table>
     {% else %}
-    <p>回答はまだありません。</p>
+    <p>回答はまだありません。ゴロを投稿してみよう！</p>
     {% endif %}
+    <form action="{% url 'topics:detail' topic.id %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ answer_form.title }}
+      </div>
+      <div class="form-group">
+        {{ answer_form.desc }}
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">新規ゴロ投稿</button>
+    </form>
   </section>
 </article>
 
