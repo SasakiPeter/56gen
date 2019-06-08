@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% block main %}
+<article>
+  <h1>新着のトピック</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">タイトル</th>
+        <th scope="col">詳細</th>
+        <th scope="col">投稿日時</th>
+        <th scope="col">投稿者</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for topic in topic_list %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+          <a href="{% url 'topics:detail' topic.id %}">
+            {{ topic.title }}
+          </a>
+        </td>
+        <td>{{ topic.text|truncatechars:8 }}</td>
+        <td>{{ topic.pub_date |date:"y/m/d P" }}</td>
+        <td>
+          <a href="{% url 'accounts:detail' topic.user.id %}">
+            {{ topic.user.display_name }}
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if score_list.has_other_pages %}
+  <ul class="pagination">
+    {% if score_list.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ score_list.previous_page_number }}"
+        >&laquo;</a
+      >
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+    {% endif %} {% for i in score_list.paginator.page_range %} 
+    {% if score_list.number == i %}
+    <li class="page-item active">
+      <span class="page-link"
+        >{{ i }} <span class="sr-only">(current)</span></span
+      >
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+    </li>
+    {% endif %} {% endfor %} {% if score_list.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ score_list.next_page_number }}"
+        >&raquo;</a
+      >
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 25rem;
+}
+
+h2 {
+  font-size: 1.9rem;
+}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %} {% block main %}
+<div class="row">
+  <div class="col-4">
+    <img
+      src="https://pharm-programmer.net/img/icon.jpg"
+      alt=""
+      class="img-thumbnail"
+    />
+    <p>{{ user.display_name }} @{{ user.username }}</p>
+  </div>
+  <div class="col-8">
+    <table class="table">
+      <thead></thead>
+      <tbody>
+        <tr>
+          <th scope="row">回答数</th>
+          <td>{{ score.num_answer }}</td>
+        </tr>
+        <tr>
+          <th scope="row">獲得票数</th>
+          <td>{{ score.num_voted }}</td>
+        </tr>
+        <tr>
+          <th scope="row">貢献値</th>
+          <td>{{ score.contribute_score }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <section>
+    <h2>実績</h2>
+    <p>主なゴロ</p>
+    {% for answer in answers %}
+    <section class="mb-5">
+      <h3>{{ forloop.counter }}</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="row">トピック</th>
+            <td>{{ answer.topic }}</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">ゴロ</th>
+            <td>{{ answer.title }}</td>
+          </tr>
+          <tr>
+            <th scope="row">説明</th>
+            <td>{{ answer.desc }}</td>
+          </tr>
+          <tr>
+            <th scope="row">票数</th>
+            <td>{{ answer.votes }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}
