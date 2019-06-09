@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Topic, Answer, Tag
-from .forms import AnswerForm
+from .forms import AnswerForm, TopicForm
 
 User = get_user_model()
 
@@ -41,6 +41,20 @@ def detail(request, topic_id):
         answer.save()
 
     return redirect('topics:detail', topic_id=topic_id)
+
+
+def build(request):
+    topic_form = TopicForm(request.POST or None)
+
+    if request.method == "POST" and topic_form.is_valid():
+        topic = topic_form.save(commit=False)
+        if request.user.is_authenticated:
+            topic.user = request.user
+        topic.save()
+        topic_form.save_m2m()
+        return redirect('topics:index')
+
+    return render(request, 'topics/build.html', {'topic_form': topic_form})
 
     # tag = Tag.objects.create(name="hoge")
     # q = Topic.objects.create(title="マメ科の生薬覚えられない")
