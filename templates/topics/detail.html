@@ -29,7 +29,7 @@
           <th scope="col">投稿者</th>
           <td>
             <a href="{% url 'accounts:detail' topic.user.id %}">
-              {{ topic.user.display_name }}
+              {{ topic.user.display_name }} @{{ topic.user.username }}
             </a>
           </td>
         </tr>
