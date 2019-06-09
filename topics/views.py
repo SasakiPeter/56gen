@@ -9,8 +9,9 @@ User = get_user_model()
 
 def index(request):
     topic_list = Topic.objects.order_by('pub_date').reverse()
+    answer_list = Answer.objects.order_by('votes').reverse()
 
-    page = request.GET.get('page', 1)
+    page = request.GET.get('topic', 1)
     paginator = Paginator(topic_list, 10)
 
     try:
@@ -20,7 +21,17 @@ def index(request):
     except EmptyPage:
         topic_list = paginator.page(paginator.num_pages)
 
-    return render(request, 'topics/index.html', {'topic_list': topic_list})
+    page = request.GET.get('goro', 1)
+    paginator = Paginator(answer_list, 10)
+
+    try:
+        answer_list = paginator.page(page)
+    except PageNotAnInteger:
+        answer_list = paginator.page(1)
+    except EmptyPage:
+        answer_list = paginator.page(paginator.num_pages)
+
+    return render(request, 'topics/index.html', {'topic_list': topic_list, 'answer_list': answer_list})
 
 
 # 1トピックに対して、複数のゴロが乗っているページ

@@ -42,7 +42,7 @@
         >
           {% csrf_token %}
           <a class="m-2" href="{% url 'topics:index' %}"
-            >ゴロみる<i class="fas fa-search"></i
+            >ゴロ探す<i class="fas fa-search"></i
           ></a>
           <a class="m-2" href="{% url 'topics:build' %}"
             >ゴロ募集<i class="fas fa-bullhorn"></i
@@ -82,7 +82,7 @@
         {% else %}
         <div>
           <a class="m-2" href="{% url 'topics:index' %}"
-            >ゴロみる<i class="fas fa-search"></i
+            >ゴロ探す<i class="fas fa-search"></i
           ></a>
           <a class="m-2" href="{% url 'topics:build' %}"
             >ゴロ募集<i class="fas fa-bullhorn"></i
