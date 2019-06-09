@@ -1,0 +1,3 @@
+{{ user.username }}様からお問い合わせ
+
+{{ message }}

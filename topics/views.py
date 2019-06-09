@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import get_template
 from .models import Topic, Answer, Voter
 from .forms import AnswerForm, TopicForm
 
@@ -87,6 +89,36 @@ def vote(request, topic_id):
                 v.delete()
 
     return redirect('topics:detail', topic_id=topic_id)
+
+
+def contact(request):
+    if request.method == "POST":
+        context = {
+            'user': request.user,
+            'message': request.POST['contact']
+        }
+
+        subject_template = get_template(
+            'topics/mail_template/contact/subject.txt')
+        subject = subject_template.render()
+
+        message_template = get_template(
+            'topics/mail_template/contact/message.txt')
+        message = message_template.render(context)
+
+        admin = get_object_or_404(User, email="56gen.operation@gmail.com")
+        admin.email_user(subject, message)
+        return render(request, 'topics/contact_done.html')
+
+    return render(request, 'topics/contact.html')
+
+
+def policy(request):
+    return render(request, 'topics/policy.html')
+
+
+def about(request):
+    return render(request, 'topics/about.html')
 
     # tag = Tag.objects.create(name="hoge")
     # q = Topic.objects.create(title="マメ科の生薬覚えられない")

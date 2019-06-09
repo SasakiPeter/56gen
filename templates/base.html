@@ -30,9 +30,20 @@
   </head>
   <body>
     <header>
-    {# expand のjcon #}
-      <nav class="navbar navbar-expand-md navbar-light bg-light" style="justify-content:space-between">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+      {# expand のjcon #}
+      <nav
+        class="navbar navbar-expand-md navbar-light bg-light"
+        style="justify-content:space-between"
+      >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarToggler"
+          aria-controls="navbarToggler"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <h1>
@@ -71,22 +82,20 @@
             </div>
           </div>
         </form>
+        {% endif %} {% if not request.user.is_authenticated %}
+        <a class="btn btn-outline-secondary" href="{% url 'accounts:signin' %}"
+          >ログイン</a
+        >
+        <a class="btn btn-outline-secondary" href="{% url 'accounts:signup' %}"
+          >新規登録</a
+        >
         {% endif %}
 
-        {% if not request.user.is_authenticated %}
-          <a
-            class="btn btn-outline-secondary"
-            href="{% url 'accounts:signin' %}"
-            >ログイン</a
-          >
-          <a
-            class="btn btn-outline-secondary"
-            href="{% url 'accounts:signup' %}"
-            >新規登録</a
-          >
-        {% endif %}
-
-        <div class="collapse navbar-collapse" id="navbarToggler" style="flex-grow:0">
+        <div
+          class="collapse navbar-collapse"
+          id="navbarToggler"
+          style="flex-grow:0"
+        >
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0 mr-0">
             <li class="nav-item">
               <a class="nav-link" href="{% url 'topics:index' %}"
@@ -118,6 +127,26 @@
       <h1>This is main block.</h1>
       {% endblock %}
     </main>
+
+    <footer
+      class="bg-light d-flex justify-content-center align-items-center flex-column"
+      style="height:100px"
+    >
+      <div>
+        <a href="{% url 'topics:about' %}">56genとは？</a>
+        <a href="{% url 'topics:contact' %}">お問い合わせ</a>
+        <a href="{% url 'topics:policy' %}">規約</a>
+      </div>
+      <div>
+        <a href="https://github.com/SasakiPeter/56gen"
+          ><i class="fab fa-github"></i
+        ></a>
+        <a href="https://twitter.com/sasakipeter"
+          ><i class="fab fa-twitter"></i
+        ></a>
+      </div>
+      <small>Copyright 2019@SasakiPeter</small>
+    </footer>
 
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block main %}
+<article>
+  <h1>お問い合わせ</h1>
+  <p class="mt-5">
+    使用上の不都合点、エラー、愚痴、その他なんでもお気軽に送信してください。
+  </p>
+  <p>改善案は出来るだけ反映していく予定です。</p>
+  <p>よろしくお願いします。</p>
+  <p>管理人</p>
+  <form class="mt-5" action="{% url 'topics:contact' %}" method="post">
+    {% csrf_token %}
+    <textarea
+      class="form-control mb-2"
+      name="contact"
+      id=""
+      cols="30"
+      rows="10"
+    ></textarea>
+    <button type="submit" class="btn btn-primary btn-block">
+      送信<i class="far fa-paper-plane"></i>
+    </button>
+  </form>
+</article>
+
+{% endblock %}
