@@ -72,10 +72,18 @@ def index(request):
 
 def detail(request, user_id):
     user = User.objects.get(pk=user_id)
-    update_score(user)
-    answers = user.answer_set.order_by('votes').reverse()[:3]
-    score = Score.objects.get(user=user_id)
-    return render(request, 'accounts/detail.html', {'user': user, 'answers': answers, 'score': score})
+
+    if request.method == "GET":
+        update_score(user)
+        answers = user.answer_set.order_by('votes').reverse()[:3]
+        score = Score.objects.get(user=user_id)
+        return render(request, 'accounts/detail.html', {'user': user, 'answers': answers, 'score': score})
+
+    if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id:
+        user.display_name = request.POST['display_name']
+        user.save()
+
+    return redirect('accounts:detail', user_id=user_id)
 
 
 def signin(request):
