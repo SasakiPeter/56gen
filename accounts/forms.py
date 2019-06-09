@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.files.storage import default_storage
 from django.utils.translation import ugettext, ugettext_lazy as _
 from .models import User
 
@@ -46,3 +47,9 @@ class RenameForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('display_name',)
+
+
+class ImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('icon', )

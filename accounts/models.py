@@ -72,6 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    icon = models.ImageField('icon', blank=True)
 
     def __str__(self):
         return f"{self.username} :  {self.email}"

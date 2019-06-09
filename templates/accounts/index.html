@@ -22,12 +22,14 @@
             style="align-items:center"
           >
             <div style="width:30px" class="mr-2">
-              <img
-                src="https://pharm-programmer.net/img/icon.jpg"
-                alt=""
-                class="rounded-circle"
+              {% if score.user.icon %}
+              <img src="{{ score.user.icon.url }}" alt="icon" class="rounded-circle"
+                style="max-width: 100%;height: auto;" />
+              {% else %}
+              <i class="fas fa-vial fa-2x rounded-circle"
                 style="max-width: 100%;height: auto;"
-              />
+              ></i>
+              {% endif %}
             </div>
             <span>
               {{ score.user.display_name }} @{{ score.user.username }}

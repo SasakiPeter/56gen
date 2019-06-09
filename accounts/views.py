@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 # from django.views import generic
 from logging import getLogger, DEBUG, basicConfig
-from .forms import LoginForm, SignUpForm, RenameForm
+from .forms import LoginForm, SignUpForm, RenameForm, ImageUploadForm
 from .models import User
 from topics.models import Score
 
@@ -42,6 +42,7 @@ def index(request):
 # ユーザー個別ページ
 def detail(request, user_id):
     rename_form = RenameForm(request.POST or None)
+    image_upload_form = ImageUploadForm(request.POST, request.FILES)
     user = get_object_or_404(User, pk=user_id)
 
     if request.method == "GET":
@@ -51,7 +52,7 @@ def detail(request, user_id):
         if request.user.is_authenticated and request.user.id == user_id:
             rename_form.fields['display_name'].widget.attrs['value'] = request.user.display_name
             context = {'user': user, 'answers': answers,
-                       'score': score, 'rename_form': rename_form}
+                       'score': score, 'rename_form': rename_form, 'image_upload_form': image_upload_form}
             return render(request, 'accounts/detail.html', context=context)
         else:
             context = {'user': user, 'answers': answers, 'score': score}
@@ -59,6 +60,10 @@ def detail(request, user_id):
 
     if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id and rename_form.is_valid():
         user.display_name = rename_form.cleaned_data['display_name']
+        user.save()
+
+    if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id and image_upload_form.is_valid():
+        user.icon = image_upload_form.cleaned_data['icon']
         user.save()
 
     return redirect('accounts:detail', user_id=user_id)

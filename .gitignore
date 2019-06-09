@@ -2,7 +2,7 @@
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+# *.py[cod]
 *$py.class
 
 # C extensions
@@ -117,4 +117,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
+# Media file
+media/

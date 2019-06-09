@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 autopep8 = "*"
+pylint = "*"
 
 [packages]
 django = "*"
@@ -12,6 +13,7 @@ gunicorn = "*"
 django-heroku = "*"
 psycopg2 = "==2.7.7"
 psycopg2-binary = "==2.7.7"
+pillow = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,12 +1,70 @@
 {% extends 'base.html' %} {% block main %}
 <div class="row">
   <div class="col-4">
-    <img
-      src="https://pharm-programmer.net/img/icon.jpg"
-      alt=""
-      class="img-thumbnail"
-    />
     {% if user.is_authenticated and request.user.id == user.id %}
+    <a href="" data-toggle="modal" data-target="#changeIconModal">
+      {% if user.icon %}
+      <img src="{{ user.icon.url }}" alt="icon" class="img-thumbnail" />
+      {% else %}
+      <i class="fas fa-vial fa-10x rounded-circle"
+        style="max-width: 100%;height: auto;"
+      ></i>
+      {% endif %}
+    </a>
+    <div
+      class="modal fade"
+      id="changeIconModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changeIconModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeDiaplayNameModalLabel">
+              アイコン画像を変更しますか？
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form
+            class="modal-body"
+            action="{% url 'accounts:detail' user.id %}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="form-group">
+              {{ image_upload_form.icon }}
+            </div>
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                閉じる
+              </button>
+              <button type="submit" class="btn btn-primary">変更を保存</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %} {% if user.icon %}
+    <img src="{{ user.icon.url }}" alt="icon" class="img-thumbnail" />
+    {% else %}
+    <i class="fas fa-vial fa-10x rounded-circle"
+      style="max-width: 100%;height: auto;"
+    ></i>
+    {% endif %} {% endif %} {% if user.is_authenticated and request.user.id == user.id %}
     <a href="" data-toggle="modal" data-target="#changeDiaplayNameModal">
       {{ user.display_name }} @{{ user.username }}
     </a>
@@ -76,7 +134,9 @@
           <th scope="row">貢献値</th>
           <td class="d-flex justify-content-between align-items-center">
             {{ score.contribute_score }}
-            <span class="badge badge-primary badge-pill">{{ score.rank }}位</span>
+            <span class="badge badge-primary badge-pill"
+              >{{ score.rank }}位</span
+            >
           </td>
         </tr>
       </tbody>
