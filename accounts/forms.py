@@ -34,3 +34,15 @@ class SignUpForm(UserCreationForm):
             return email
         raise forms.ValidationError(
             _('同じメールアドレスが既に登録済みです。'))
+
+
+class RenameForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = "呼び名を入れてください"
+
+    class Meta:
+        model = User
+        fields = ('display_name',)

@@ -16,8 +16,18 @@
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
         <td>
-          <a href="{% url 'accounts:detail' score.user.id %}">
-            {{ score.user.display_name }} @{{ score.user.username }}
+          <a href="{% url 'accounts:detail' score.user.id %}" class="row" style="align-items:center">
+            <div style="width:30px" class="mr-2">
+              <img
+                src="https://pharm-programmer.net/img/icon.jpg"
+                alt=""
+                class="rounded-circle"
+                style="max-width: 100%;height: auto;"
+              />
+            </div>
+            <span>
+              {{ score.user.display_name }} @{{ score.user.username }}
+            </span>
           </a>
         </td>
         <td>{{ score.num_answer }}</td>

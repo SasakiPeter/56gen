@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 # from django.views import generic
 from logging import getLogger, DEBUG, basicConfig
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, RenameForm
 from .models import User
 from topics.models import Score
 
@@ -71,16 +71,27 @@ def index(request):
 
 
 def detail(request, user_id):
-    user = User.objects.get(pk=user_id)
+    rename_form = RenameForm(request.POST or None)
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == "GET" and request.user.is_authenticated and request.user.id == user_id:
+        update_score(user)
+        answers = user.answer_set.order_by('votes').reverse()[:3]
+        score = Score.objects.get(user=user_id)
+        rename_form.fields['display_name'].widget.attrs['value'] = request.user.display_name
+        context = {'user': user, 'answers': answers,
+                   'score': score, 'rename_form': rename_form}
+        return render(request, 'accounts/detail.html', context=context)
 
     if request.method == "GET":
         update_score(user)
         answers = user.answer_set.order_by('votes').reverse()[:3]
         score = Score.objects.get(user=user_id)
-        return render(request, 'accounts/detail.html', {'user': user, 'answers': answers, 'score': score})
+        context = {'user': user, 'answers': answers, 'score': score}
+        return render(request, 'accounts/detail.html', context=context)
 
-    if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id:
-        user.display_name = request.POST['display_name']
+    if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id and rename_form.is_valid():
+        user.display_name = rename_form.cleaned_data['display_name']
         user.save()
 
     return redirect('accounts:detail', user_id=user_id)
