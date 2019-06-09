@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Topic, Answer, Tag
+from .models import Topic, Answer, Voter
 from .forms import AnswerForm, TopicForm
 
 User = get_user_model()
@@ -41,8 +41,9 @@ def detail(request, topic_id):
 
     if request.method == "GET":
         answer_list = topic.answer_set.order_by('votes').reverse()
-        # topic = Topic.objects.get(id=topic_id)
-        return render(request, 'topics/detail.html', {'topic': topic, 'answer_list': answer_list, 'answer_form': answer_form})
+        context = {'topic': topic, 'answer_list': answer_list,
+                   'answer_form': answer_form}
+        return render(request, 'topics/detail.html', context)
 
     if request.method == "POST" and answer_form.is_valid():
         answer = answer_form.save(commit=False)
@@ -66,6 +67,26 @@ def build(request):
         return redirect('topics:index')
 
     return render(request, 'topics/build.html', {'topic_form': topic_form})
+
+
+def vote(request, topic_id):
+    if request.method == "POST" and request.user.is_authenticated:
+        if 'up' in request.POST:
+            ans = get_object_or_404(Answer, pk=request.POST['up'])
+            if not Voter.objects.filter(user=request.user.pk, answer=ans.pk).exists():
+                ans.votes += 1
+                ans.save()
+                v = Voter(user=request.user, answer=ans)
+                v.save()
+        if 'down' in request.POST:
+            ans = get_object_or_404(Answer, pk=request.POST['down'])
+            if Voter.objects.filter(user=request.user.pk, answer=ans.pk).exists():
+                ans.votes -= 1
+                ans.save()
+                v = Voter.objects.get(user=request.user, answer=ans)
+                v.delete()
+
+    return redirect('topics:detail', topic_id=topic_id)
 
     # tag = Tag.objects.create(name="hoge")
     # q = Topic.objects.create(title="マメ科の生薬覚えられない")

@@ -86,7 +86,7 @@
       <tbody>
         {% for answer in answer_list %}
         <tr>
-          <th scope="row">{{ answer.votes }}</th>
+          <th scope="row">{{ answer.votes }}票</th>
           <td>{{ answer.title }}</td>
           <td>
             <a href="{% url 'topics:detail' answer.topic.id %}">

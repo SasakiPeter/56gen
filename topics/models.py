@@ -36,6 +36,13 @@ class Answer(models.Model):
         return f"{self.title}: {self.votes}"
 
 
+class Voter(models.Model):
+    anonymous = User.objects.get(username="anonymous")
+    user = models.ForeignKey(User, verbose_name="投票者",
+                             on_delete=models.SET_DEFAULT, default=anonymous.pk)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+
+
 class Score(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     num_answer = models.IntegerField(default=0)

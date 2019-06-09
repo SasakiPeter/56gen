@@ -52,7 +52,22 @@
       <tbody>
         {% for answer in answer_list %}
         <tr>
-          <th scope="row">{{ answer.votes }}</th>
+          <th scope="row">
+            {{ answer.votes }}票 {% if request.user.is_authenticated %}
+            <form action="{% url 'topics:vote' topic.id %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-info" name="up" value="{{ answer.pk }}">
+                <i class="far fa-thumbs-up"></i>
+              </button>
+            </form>
+            <form action="{% url 'topics:vote' topic.id %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger" name="down" value="{{ answer.pk }}">
+                <i class="far fa-thumbs-down"></i>
+              </button>
+            </form>
+            {% endif %}
+          </th>
           <td>{{ answer.title }}</td>
           <td>{{ answer.desc }}</td>
           <td>{{ answer.pub_date | date:"y/m/d P" }}</td>
@@ -76,7 +91,9 @@
       <div class="form-group">
         {{ answer_form.desc }}
       </div>
-      <button type="submit" class="btn btn-primary btn-block">新規ゴロ投稿</button>
+      <button type="submit" class="btn btn-primary btn-block">
+        新規ゴロ投稿
+      </button>
     </form>
   </section>
 </article>
