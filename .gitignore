@@ -118,4 +118,5 @@ dmypy.json
 .pyre/
 
 # Media file
-media/
+media/*
+!.gitkeep
