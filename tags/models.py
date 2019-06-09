@@ -6,3 +6,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def num_topics(self):
+        return len(self.topic_set.all())

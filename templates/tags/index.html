@@ -1,15 +1,17 @@
 {% extends 'base.html' %} {% block main %}
 <article>
   <h1>タグ一覧</h1>
-    <ul>
-      {% for tag in tag_list %}
-      <li>
-        <a href="{% url 'tags:detail' tag.id %}">
-          {{ tag.name }}
-        </a>
+  <ul class="list-group mt-5">
+    {% for tag in tag_list %}
+    <a href="{% url 'tags:detail' tag.id %}">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        {{ tag.name }}
+        <span class="badge badge-primary badge-pill">{{ tag.num_topics }}</span>
       </li>
-      {% endfor %}
-    </ul>
-  </section>
+    </a>
+    {% endfor %}
+  </ul>
 </article>
 {% endblock %}
