@@ -22,42 +22,9 @@ logger = getLogger(__name__)
 logger.setLevel(DEBUG)
 
 
-def calc_cont_sc(num_voted, num_ans):
-    if num_voted == 0:
-        return 0
-    else:
-        return num_voted*100//num_ans
-
-
-def update_score(user):
-    all_votes = 0
-    ans_list = user.answer_set.all()
-    for ans in ans_list:
-        all_votes += ans.votes
-    try:
-        score = Score.objects.get(user=user)
-    except Score.DoesNotExist:
-        score = Score.objects.create(user=user, num_answer=len(
-            ans_list), num_voted=all_votes, contribute_score=calc_cont_sc(all_votes, len(ans_list)))
-        score.save()
-    else:
-        score.num_answer = len(ans_list)
-        score.num_voted = all_votes
-        score.contribute_score = calc_cont_sc(all_votes, len(ans_list))
-        score.save()
-
-
-def exclude_anonymous(queryset):
-    return [q for q in queryset if q.user.username != "anonymous"]
-
-
 # ランキング
 def index(request):
-    user_list = User.objects.all()
-    for user in user_list:
-        update_score(user)
-    score_list = Score.objects.order_by('contribute_score').reverse()
-    score_list = exclude_anonymous(score_list)
+    score_list = Score.rank_list()
 
     page = request.GET.get('page', 1)
     paginator = Paginator(score_list, 10)
@@ -78,7 +45,7 @@ def detail(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     if request.method == "GET":
-        update_score(user)
+        Score.update_score(user)
         answers = user.answer_set.order_by('votes').reverse()[:3]
         score = get_object_or_404(Score, user=user_id)
         if request.user.is_authenticated and request.user.id == user_id:

@@ -44,3 +44,46 @@ class Score(models.Model):
 
     def __str__(self):
         return self.user.display_name + ': ' + str(self.contribute_score)
+
+    @classmethod
+    def calc_cont_sc(cls, num_voted, num_ans):
+        if num_voted == 0:
+            return 0
+        else:
+            return num_voted*100//num_ans
+
+    @classmethod
+    def exclude_anonymous(cls, queryset):
+        return [q for q in queryset if q.user.username != "anonymous"]
+
+    @classmethod
+    def update_score(cls, user):
+        all_votes = 0
+        ans_list = user.answer_set.all()
+        for ans in ans_list:
+            all_votes += ans.votes
+        try:
+            score = cls.objects.get(user=user)
+        except cls.DoesNotExist:
+            score = cls.objects.create(user=user, num_answer=len(
+                ans_list), num_voted=all_votes, contribute_score=calc_cont_sc(all_votes, len(ans_list)))
+            score.save()
+        else:
+            score.num_answer = len(ans_list)
+            score.num_voted = all_votes
+            score.contribute_score = cls.calc_cont_sc(all_votes, len(ans_list))
+            score.save()
+
+    @classmethod
+    def rank_list(cls):
+        user_list = User.objects.all()
+        for user in user_list:
+            cls.update_score(user)
+        score_list = Score.objects.order_by('contribute_score').reverse()
+        return cls.exclude_anonymous(score_list)
+
+    def rank(self):
+        score_list = self.rank_list()
+        for index, score in enumerate(score_list):
+            if score.user.id == self.user.id:
+                return index + 1
