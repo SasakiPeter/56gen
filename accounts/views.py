@@ -72,23 +72,20 @@ def index(request):
 
 def detail(request, user_id):
     rename_form = RenameForm(request.POST or None)
-    user = get_object_or_404(User, id=user_id)
-
-    if request.method == "GET" and request.user.is_authenticated and request.user.id == user_id:
-        update_score(user)
-        answers = user.answer_set.order_by('votes').reverse()[:3]
-        score = Score.objects.get(user=user_id)
-        rename_form.fields['display_name'].widget.attrs['value'] = request.user.display_name
-        context = {'user': user, 'answers': answers,
-                   'score': score, 'rename_form': rename_form}
-        return render(request, 'accounts/detail.html', context=context)
+    user = get_object_or_404(User, pk=user_id)
 
     if request.method == "GET":
         update_score(user)
         answers = user.answer_set.order_by('votes').reverse()[:3]
-        score = Score.objects.get(user=user_id)
-        context = {'user': user, 'answers': answers, 'score': score}
-        return render(request, 'accounts/detail.html', context=context)
+        score = get_object_or_404(Score, user=user_id)
+        if request.user.is_authenticated and request.user.id == user_id:
+            rename_form.fields['display_name'].widget.attrs['value'] = request.user.display_name
+            context = {'user': user, 'answers': answers,
+                       'score': score, 'rename_form': rename_form}
+            return render(request, 'accounts/detail.html', context=context)
+        else:
+            context = {'user': user, 'answers': answers, 'score': score}
+            return render(request, 'accounts/detail.html', context=context)
 
     if request.method == "POST" and request.user.is_authenticated and request.user.id == user_id and rename_form.is_valid():
         user.display_name = rename_form.cleaned_data['display_name']

@@ -18,6 +18,9 @@ class Topic(models.Model):
     def __str__(self):
         return self.title
 
+    def throw_three_answer(self):
+        return self.answer_set.order_by('votes').reverse()[:3]
+
 
 class Answer(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)

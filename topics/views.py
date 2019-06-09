@@ -37,16 +37,16 @@ def index(request):
 # 1トピックに対して、複数のゴロが乗っているページ
 def detail(request, topic_id):
     answer_form = AnswerForm(request.POST or None)
+    topic = get_object_or_404(Topic, pk=topic_id)
 
     if request.method == "GET":
-        topic = get_object_or_404(Topic, id=topic_id)
         answer_list = topic.answer_set.order_by('votes').reverse()
         # topic = Topic.objects.get(id=topic_id)
         return render(request, 'topics/detail.html', {'topic': topic, 'answer_list': answer_list, 'answer_form': answer_form})
 
     if request.method == "POST" and answer_form.is_valid():
         answer = answer_form.save(commit=False)
-        answer.topic = Topic.objects.get(id=topic_id)
+        answer.topic = topic
         if request.user.is_authenticated:
             answer.user = request.user
         answer.save()

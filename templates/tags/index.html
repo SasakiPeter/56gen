@@ -3,7 +3,11 @@
   <h1>タグ一覧</h1>
     <ul>
       {% for tag in tag_list %}
-      <li>{{ tag.name }}</li>
+      <li>
+        <a href="{% url 'tags:detail' tag.id %}">
+          {{ tag.name }}
+        </a>
+      </li>
       {% endfor %}
     </ul>
   </section>
