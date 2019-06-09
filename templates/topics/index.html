@@ -25,9 +25,13 @@
           <td>{{ topic.text | truncatechars:8 }}</td>
           <td>{{ topic.pub_date | date:"y/m/d P" }}</td>
           <td>
+            {% if topic.user.username == "anonymous" %}
+              {{ topic.user.display_name }}
+            {% else %}
             <a href="{% url 'accounts:detail' topic.user.id %}">
               {{ topic.user.display_name }}
             </a>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -91,9 +95,13 @@
           </td>
           <td>{{ answer.pub_date | date:"y/m/d P" }}</td>
           <td>
+            {% if answer.user.username == "anonymous" %}
+              {{ answer.user.display_name }}
+            {% else %}
             <a href="{% url 'accounts:detail' answer.user.id %}">
               {{ answer.user.display_name }}
             </a>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

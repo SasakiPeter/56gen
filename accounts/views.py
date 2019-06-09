@@ -47,13 +47,17 @@ def update_score(user):
         score.save()
 
 
+def exclude_anonymous(queryset):
+    return [q for q in queryset if q.user.username != "anonymous"]
+
+
 # ランキング
 def index(request):
-    # 貢献値でソートかける
     user_list = User.objects.all()
     for user in user_list:
         update_score(user)
     score_list = Score.objects.order_by('contribute_score').reverse()
+    score_list = exclude_anonymous(score_list)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(score_list, 10)
@@ -67,9 +71,8 @@ def index(request):
 
     return render(request, 'accounts/index.html', {'score_list': score_list})
 
+
 # ユーザー個別ページ
-
-
 def detail(request, user_id):
     rename_form = RenameForm(request.POST or None)
     user = get_object_or_404(User, pk=user_id)
