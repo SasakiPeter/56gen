@@ -1,15 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from tags.models import Tag
 
 User = get_user_model()
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=32)
-
-    def __str__(self):
-        return self.name
 
 
 class Topic(models.Model):

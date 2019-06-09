@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block main %}
+<article>
+  <h1>タグ一覧</h1>
+    <ul>
+      {% for tag in tag_list %}
+      <li>{{ tag.name }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</article>
+{% endblock %}
