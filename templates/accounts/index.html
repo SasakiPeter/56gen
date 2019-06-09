@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block main %}
+<article>
+  <h1>ランキング</h1>
+  <table class="table mt-5">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">名前</th>
+        <th scope="col">回答数</th>
+        <th scope="col">獲得票数</th>
+        <th scope="col">貢献値</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for score in score_list %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+          <a
+            href="{% url 'accounts:detail' score.user.id %}"
+            class="row"
+            style="align-items:center"
+          >
+            <div style="width:30px" class="mr-2">
+              {% if score.user.icon %}
+              <img src="{{ score.user.icon.url }}" alt="icon" class="rounded-circle"
+                style="max-width: 100%;height: auto;" />
+              {% else %}
+              <i class="fas fa-vial fa-2x rounded-circle"
+                style="max-width: 100%;height: auto;"
+              ></i>
+              {% endif %}
+            </div>
+            <span>
+              {{ score.user.display_name }} @{{ score.user.username }}
+            </span>
+          </a>
+        </td>
+        <td>{{ score.num_answer }}</td>
+        <td>{{ score.num_voted }}</td>
+        <td>{{ score.contribute_score }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if score_list.has_other_pages %}
+  <ul class="pagination">
+    {% if score_list.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ score_list.previous_page_number }}"
+        >&laquo;</a
+      >
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+    {% endif %} {% for i in score_list.paginator.page_range %} {% if score_list.number == i %}
+    <li class="page-item active">
+      <span class="page-link"
+        >{{ i }} <span class="sr-only">(current)</span></span
+      >
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+    </li>
+    {% endif %} {% endfor %} {% if score_list.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ score_list.next_page_number }}"
+        >&raquo;</a
+      >
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'base.html' %} {% block main %}
+<article>
+  <h1>気になる話題を探そう</h1>
+  <section class="mt-5 mb-5">
+    <h2>新着のトピック</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">タイトル</th>
+          <th scope="col">詳細</th>
+          <th scope="col">投稿日時</th>
+          <th scope="col">投稿者</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for topic in topic_list %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>
+            <a href="{% url 'topics:detail' topic.id %}">
+              {{ topic.title }}
+            </a>
+          </td>
+          <td>{{ topic.text | truncatechars:8 }}</td>
+          <td>{{ topic.pub_date | date:"y/m/d P" }}</td>
+          <td>
+            {% if topic.user.username == "anonymous" %}
+              {{ topic.user.display_name }}
+            {% else %}
+            <a href="{% url 'accounts:detail' topic.user.id %}">
+              {{ topic.user.display_name }}
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if topic_list.has_other_pages %}
+    <ul class="pagination">
+      {% if topic_list.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?topic={{ topic_list.previous_page_number }}"
+          >&laquo;</a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %} {% for i in topic_list.paginator.page_range %} 
+      {% if topic_list.number == i %}
+      <li class="page-item active">
+        <span class="page-link"
+          >{{ i }} <span class="sr-only">(current)</span></span
+        >
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="?topic={{ i }}">{{ i }}</a>
+      </li>
+      {% endif %} {% endfor %} {% if topic_list.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?topic={{ topic_list.next_page_number }}"
+          >&raquo;</a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+    {% endif %}
+  </section>
+  <section class="mb-5">
+    <h2>注目のゴロ</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">票数</th>
+          <th scope="col">ゴロ</th>
+          <th scope="col">トピック</th>
+          <th scope="col">投稿日時</th>
+          <th scope="col">投稿者</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for answer in answer_list %}
+        <tr>
+          <th scope="row">{{ answer.votes }}票</th>
+          <td>{{ answer.title }}</td>
+          <td>
+            <a href="{% url 'topics:detail' answer.topic.id %}">
+              {{ answer.topic | truncatechars:8 }}
+            </a>
+          </td>
+          <td>{{ answer.pub_date | date:"y/m/d P" }}</td>
+          <td>
+            {% if answer.user.username == "anonymous" %}
+              {{ answer.user.display_name }}
+            {% else %}
+            <a href="{% url 'accounts:detail' answer.user.id %}">
+              {{ answer.user.display_name }}
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if answer_list.has_other_pages %}
+    <ul class="pagination">
+      {% if answer_list.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?goro={{ answer_list.previous_page_number }}"
+          >&laquo;</a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %} {% for i in answer_list.paginator.page_range %} 
+      {% if answer_list.number == i %}
+      <li class="page-item active">
+        <span class="page-link"
+          >{{ i }} <span class="sr-only">(current)</span></span
+        >
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="?goro={{ i }}">{{ i }}</a>
+      </li>
+      {% endif %} {% endfor %} {% if answer_list.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?goro={{ answer_list.next_page_number }}"
+          >&raquo;</a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

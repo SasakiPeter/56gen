@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}" />
+{% endblock %} {% block main %}
+<div class="card">
+  <div class="card-body">
+    <h2>アカウント作成</h2>
+
+    {% if form.errors %} {% for field in form %} {% for error in field.errors %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <span>{{ error }}</span>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %} {% endfor %} {% endif %}
+
+    <form action="{% url 'accounts:signup' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.username }}
+      </div>
+      <div class="form-group">
+        {{ form.email }}
+      </div>
+      <div class="form-group">
+        {{ form.password1 }}
+      </div>
+      <div class="form-group">
+        {{ form.password2 }}
+      </div>
+      <button type="submit" class="btn btn-primary">
+        アカウント作成
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- <script>
+  const setDisable = (element, name) => {
+    element.setAttribute(name, true);
+    let hoge =
+      '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+    hoge = hoge.concat(element.innerText);
+    $(function() {
+      $(element).html(hoge);
+    });
+  };
+</script> 
+onclick="setDisable(this,'disabled')"
+-->
+
+{% endblock %}
