@@ -44,7 +44,6 @@ def detail(request, user_id):
     rename_form = RenameForm(request.POST or None)
     image_upload_form = ImageUploadForm(request.POST, request.FILES)
     user = get_object_or_404(User, pk=user_id)
-
     if request.method == "GET":
         Score.update_score(user)
         answers = user.answer_set.order_by('votes').reverse()[:3]
