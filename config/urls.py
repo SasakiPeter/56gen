@@ -27,4 +27,4 @@ urlpatterns = [
     path('topics/', include('topics.urls')),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

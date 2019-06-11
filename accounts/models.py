@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -72,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    icon = models.ImageField('icon', blank=True)
+    icon = models.ImageField(verbose_name='icon', blank=True)
 
     def __str__(self):
         return f"{self.username} :  {self.email}"
