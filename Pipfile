@@ -16,6 +16,7 @@ psycopg2-binary = "==2.7.7"
 pillow = "*"
 boto3 = "*"
 django-storages = "*"
+django-markdownx = "*"
 
 [requires]
 python_version = "3.7"

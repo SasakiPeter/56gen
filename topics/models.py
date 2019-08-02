@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils import timezone
+from markdownx.models import MarkdownxField
 from accounts.models import User
 from tags.models import Tag
 
 
 class Topic(models.Model):
     title = models.CharField("タイトル", max_length=255)
-    text = models.TextField("詳細")
+    text = MarkdownxField("詳細", help_text="※Markdown形式に対応しています。")
     pub_date = models.DateTimeField('投稿日時', default=timezone.now)
     tags = models.ManyToManyField(Tag, verbose_name="タグ")
     user = models.ForeignKey(User, verbose_name="投稿者", on_delete=models.SET_DEFAULT,
@@ -22,7 +23,7 @@ class Topic(models.Model):
 class Answer(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     title = models.CharField("ゴロ", max_length=255)
-    desc = models.TextField("説明")
+    desc = MarkdownxField("説明", help_text="※Markdown形式に対応しています。")
     pub_date = models.DateTimeField('回答日時', default=timezone.now)
     votes = models.IntegerField(default=0)
     user = models.ForeignKey(User, verbose_name="回答者",
