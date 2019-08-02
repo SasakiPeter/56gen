@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block main %}
+{% extends 'base.html' %} {% load parser %} {% block main %}
 <article>
   <h1>{{ topic.title }}</h1>
   <section class="mt-5 mb-5">
@@ -11,7 +11,7 @@
         </tr>
         <tr>
           <th scope="col">詳細</th>
-          <td>{{ topic.text }}</td>
+          <td>{{ topic.text | markdown_to_html_with_escape }}</td>
         </tr>
         <tr>
           <th scope="col">投稿日時</th>
@@ -56,20 +56,28 @@
             {{ answer.votes }}票 {% if request.user.is_authenticated %}
             <form action="{% url 'topics:vote' topic.id %}" method="post">
               {% csrf_token %}
-              <button class="btn btn-outline-info" name="up" value="{{ answer.pk }}">
+              <button
+                class="btn btn-outline-info"
+                name="up"
+                value="{{ answer.pk }}"
+              >
                 <i class="far fa-thumbs-up"></i>
               </button>
             </form>
             <form action="{% url 'topics:vote' topic.id %}" method="post">
               {% csrf_token %}
-              <button class="btn btn-outline-danger" name="down" value="{{ answer.pk }}">
+              <button
+                class="btn btn-outline-danger"
+                name="down"
+                value="{{ answer.pk }}"
+              >
                 <i class="far fa-thumbs-down"></i>
               </button>
             </form>
             {% endif %}
           </th>
           <td>{{ answer.title }}</td>
-          <td>{{ answer.desc }}</td>
+          <td>{{ answer.desc | markdown_to_html_with_escape }}</td>
           <td>{{ answer.pub_date | date:"y/m/d P" }}</td>
           <td>
             <a href="{% url 'accounts:detail' answer.user.id %}">
@@ -89,7 +97,11 @@
         {{ answer_form.title }}
       </div>
       <div class="form-group">
+        {{ answer_form.desc.help_text }}
         {{ answer_form.desc }}
+      </div>
+      <div class="form-group">
+        {{ answer_form.media }}
       </div>
       <button type="submit" class="btn btn-primary btn-block">
         新規ゴロ投稿
