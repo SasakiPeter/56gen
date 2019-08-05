@@ -2,6 +2,10 @@
   font-size: 12px;
 }
 
+img {
+  width: 100%;
+}
+
 .markdownx .markdownx-preview blockquote {
   color: #666;
   margin: 0;
