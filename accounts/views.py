@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -11,9 +12,10 @@ from django.db import transaction
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
+from django.urls import reverse_lazy
 # from django.views import generic
 from logging import getLogger, DEBUG, basicConfig
-from .forms import LoginForm, SignUpForm, RenameForm, ImageUploadForm
+from .forms import LoginForm, SignUpForm, RenameForm, ImageUploadForm, MyPasswordResetForm, MySetPasswordForm
 from .models import User
 from topics.models import Score
 
@@ -160,3 +162,25 @@ def signup_complete(request, token):
                           backend='django.contrib.auth.backends.ModelBackend')
                     return redirect('topics:index')
     return HttpResponseBadRequest()
+
+
+class PasswordReset(PasswordResetView):
+    subject_template_name = 'accounts/mail_template/password_reset/subject.txt'
+    email_template_name = 'accounts/mail_template/password_reset/message.txt'
+    template_name = 'accounts/password_reset_form.html'
+    form_class = MyPasswordResetForm
+    success_url = reverse_lazy('accounts:password_reset_done')
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    template_name = 'accounts/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    form_class = MySetPasswordForm
+    success_url = reverse_lazy('accounts:password_reset_complete')
+    template_name = 'accounts/password_reset_confirm.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    template_name = 'accounts/password_reset_complete.html'

@@ -1,6 +1,6 @@
 import os
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.core.files.storage import default_storage
 from django.utils.translation import ugettext, ugettext_lazy as _
 from .models import User
@@ -54,3 +54,17 @@ class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('icon', )
+
+
+class MyPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class MySetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

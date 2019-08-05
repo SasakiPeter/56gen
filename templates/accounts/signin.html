@@ -27,6 +27,9 @@
       <div class="form-group">
         {{ form.password }}
       </div>
+      <a href="{% url 'accounts:password_reset_form' %}" class="d-block"
+        >パスワードを忘れた方はこちら</a
+      >
       <button type="submit" class="btn btn-primary">ログイン</button>
     </form>
   </div>
