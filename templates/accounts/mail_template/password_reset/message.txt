@@ -1,0 +1,11 @@
+{{ user.username }}様
+
+下記URLよりサイトにアクセスの上、パスワードの再設定を行ってください。
+
+{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confirm'　uid token %}
+
+■ご注意■
+本メールに心当たりのない方は、お手数ですが、
+破棄いただけますよう、お願い申し上げます。
+
+56gen 運営
