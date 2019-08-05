@@ -1,0 +1,19 @@
+version: "3"
+services:
+  db:
+    image: postgres:10
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD:/tmp/working
+    working_dir: /tmp/working
+    tty: true
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    command: > 
+    python manage.py migrate &&
+    python manage.py runserver 0.0.0.0:8000
