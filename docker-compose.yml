@@ -1,19 +1,28 @@
-version: "3"
+version: "2.3"
 services:
+  datastore:
+    image: busybox
+    volumes:
+      - postgresql:/var/lib/postgresql/data
   db:
     image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    ports:
+      - 5432:5432
+    volumes_from:
+      - datastore
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: ./
     volumes:
-      - $PWD:/tmp/working
-    working_dir: /tmp/working
+      - ./:/code
+    working_dir: /code
     tty: true
     ports:
       - 8000:8000
     depends_on:
       - db
-    command: >
-      python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
+volumes:
+  postgresql:
